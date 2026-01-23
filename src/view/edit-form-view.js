@@ -4,7 +4,6 @@ import {
   DESTINATIONS,
   EDIT_OFFERS,
   DESTINATION_DESCRIPTIONS,
-  DESTINATION_PHOTOS,
 } from "../constants.js";
 import { getLabel } from "../utils.js";
 
