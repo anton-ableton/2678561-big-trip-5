@@ -14,7 +14,7 @@ export const FILTER_TYPES = [
 ];
 
 export const EVENT_TYPES = [
-  'taxi', 'bus', 'train', 'ship', 'drive', 
+  'taxi', 'bus', 'train', 'ship', 'drive',
   'flight', 'check-in', 'sightseeing', 'restaurant'
 ];
 
