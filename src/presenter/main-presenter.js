@@ -1,11 +1,11 @@
-import SortView from '../view/sort-view.js';
-import FiltersView from '../view/filters-view.js';
-import CreateFormView from '../view/create-form-view.js';
-import EditFormView from '../view/edit-form-view.js';
-import RoutePointView from '../view/route-point-view.js';
+import SortView from "../view/sort/view.js";
+import FiltersView from "../view/filters/view.js";
+import CreateFormView from "../view/create-form/view.js";
+import EditFormView from "../view/edit-form/view.js";
+import RoutePointView from "../view/route-point/view.js";
 
-import { render, RenderPosition } from '../render.js';
-import { adaptPointToView } from '../utils/point-adapter.js';
+import { render, RenderPosition } from "../render.js";
+import { adaptPointToView } from "../utils/point-adapter.js";
 
 export default class MainPresenter {
   #sortContainer = null;
@@ -13,7 +13,12 @@ export default class MainPresenter {
   #tripEventsContainer = null;
   #pointsModel = null;
 
-  constructor({ sortContainer, filtersContainer, tripEventsContainer, pointsModel }) {
+  constructor({
+    sortContainer,
+    filtersContainer,
+    tripEventsContainer,
+    pointsModel,
+  }) {
     this.#sortContainer = sortContainer;
     this.#filtersContainer = filtersContainer;
     this.#tripEventsContainer = tripEventsContainer;
@@ -40,7 +45,7 @@ export default class MainPresenter {
     const [editPoint, ...routePoints] = points;
 
     const editDestination = this.#pointsModel.getDestinationById(
-      editPoint.destination
+      editPoint.destination,
     );
 
     const editOffers = editPoint.offers
@@ -50,44 +55,45 @@ export default class MainPresenter {
     const editPointData = adaptPointToView(
       editPoint,
       editDestination,
-      editOffers
+      editOffers,
     );
 
     const destinations = this.#pointsModel.getDestinations();
-    const offersByType = this.#pointsModel.getOffersByType(points.type);
+    const offersByType = this.#pointsModel.getOffersByType(editPoint.type);
 
     render(
       new EditFormView({
         point: editPointData,
         destinations,
-        offersByType
+        offersByType,
       }),
       this.#tripEventsContainer,
-      RenderPosition.AFTERBEGIN
+      RenderPosition.AFTERBEGIN,
     );
 
     routePoints.forEach((point) => {
-      const destination = this.#pointsModel.getDestinationById(point.destination);
+      const destination = this.#pointsModel.getDestinationById(
+        point.destination,
+      );
 
       const offers = point.offers
         .map((id) => this.#pointsModel.getOfferById(point.type, id))
         .filter(Boolean);
 
-      const pointData = adaptPointToView(
-        point,
-        destination,
-        offers
-      );
+      const pointData = adaptPointToView(point, destination, offers);
 
-      render(
-        new RoutePointView(pointData),
-        this.#tripEventsContainer
-      );
+      render(new RoutePointView(pointData), this.#tripEventsContainer);
     });
 
+    const allDestinations = this.#pointsModel.getDestinations();
+    const defaultOffers = this.#pointsModel.getOffersByType("flight"); // или другой тип по умолчанию
+
     render(
-      new CreateFormView(),
-      this.#tripEventsContainer
+      new CreateFormView({
+        destinations: allDestinations,
+        offersByType: defaultOffers,
+      }),
+      this.#tripEventsContainer,
     );
   }
 }
