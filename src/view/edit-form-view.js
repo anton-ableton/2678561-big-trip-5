@@ -4,8 +4,8 @@ import {
   DESTINATIONS,
   EDIT_OFFERS,
   DESTINATION_DESCRIPTIONS,
-} from '../constants.js';
-import { getLabel } from '../utils.js';
+} from '../const.js';
+import { getLabel } from '../utils/utils.js';
 
 function createEventTypeItemTemplate(type, isChecked) {
   return `

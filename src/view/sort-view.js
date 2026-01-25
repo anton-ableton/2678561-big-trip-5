@@ -1,6 +1,6 @@
 import { createElement } from '../render.js';
-import { SORT_TYPES } from '../constants.js';
-import { getLabel } from '../utils.js';
+import { SORT_TYPES } from '../const.js';
+import { getLabel } from '../utils/utils.js';
 
 function createSortItemTemplate({ type, isDisabled }, currentSortType) {
   return `

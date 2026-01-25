@@ -1,6 +1,5 @@
 import { createElement } from '../render.js';
-import { POINT_OFFERS } from '../constants.js';
-import { getLabel, formatDuration, formatDate, formatTime } from '../utils.js';
+import { getLabel } from '../utils/utils.js';
 
 function createPointOffersTemplate(offers) {
   if (!offers || !offers.length) {
@@ -38,37 +37,35 @@ function createFavoriteButtonTemplate(isFavorite) {
   `;
 }
 
-function createRoutePointTemplate(data = {}) {
+function createRoutePointTemplate(point = {}) {
   const {
-    type = 'taxi',
-    destination = 'Amsterdam',
-    date = '2019-03-18',
-    startTime = '2019-03-18T10:30',
-    endTime = '2019-03-18T11:00',
-    price = 20,
-    isFavorite = false
-  } = data;
+    type = '',
+    destination = '',
+    formattedDate = '',
+    formattedStartTime = '',
+    formattedEndTime = '',
+    duration = '',
+    eventTitle = '',
+    price = 0,
+    isFavorite = false,
+    offers = []
+  } = point;
 
-  const offers = POINT_OFFERS[type] || [];
-  const formattedDate = formatDate(date);
-  const formattedStartTime = formatTime(startTime);
-  const formattedEndTime = formatTime(endTime);
-  const duration = formatDuration(startTime, endTime);
-  const eventTitle = `${getLabel(type)} ${destination}`;
+  const title = eventTitle || `${getLabel(type)} ${destination}`;
 
   return `
     <li class='trip-events__item'>
       <div class='event'>
-        <time class='event__date' datetime='${date}'>${formattedDate}</time>
+        <time class='event__date' datetime='${point.date_from || ''}'>${formattedDate}</time>
         <div class='event__type'>
           <img class='event__type-icon' width='42' height='42' src='img/icons/${type}.png' alt='Event type icon'>
         </div>
-        <h3 class='event__title'>${eventTitle}</h3>
+        <h3 class='event__title'>${title}</h3>
         <div class='event__schedule'>
           <p class='event__time'>
-            <time class='event__start-time' datetime='${startTime}'>${formattedStartTime}</time>
+            <time class='event__start-time' datetime='${point.date_from || ''}'>${formattedStartTime}</time>
             &mdash;
-            <time class='event__end-time' datetime='${endTime}'>${formattedEndTime}</time>
+            <time class='event__end-time' datetime='${point.date_to || ''}'>${formattedEndTime}</time>
           </p>
           <p class='event__duration'>${duration}</p>
         </div>
@@ -87,14 +84,14 @@ function createRoutePointTemplate(data = {}) {
 
 export default class RoutePointView {
   #element = null;
-  #data = {};
+  #point = {};
 
-  constructor(data = {}) {
-    this.#data = data;
+  constructor(point = {}) {
+    this.#point = point;
   }
 
   get template() {
-    return createRoutePointTemplate(this.#data);
+    return createRoutePointTemplate(this.#point);
   }
 
   getElement() {

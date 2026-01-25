@@ -1,6 +1,6 @@
 import { createElement } from '../render.js';
-import { FILTER_TYPES } from '../constants.js';
-import { getLabel } from '../utils.js';
+import { FILTER_TYPES } from '../const.js';
+import { getLabel } from '../utils/utils.js';
 
 function createFilterItemTemplate({ type, isChecked }) {
   return `

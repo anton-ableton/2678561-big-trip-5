@@ -1,3 +1,5 @@
+export const POINT_COUNT_DEFAULT = 5;
+
 export const SORT_TYPES = [
   { type: 'day', isDisabled: false },
   { type: 'event', isDisabled: true },

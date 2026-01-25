@@ -3,17 +3,21 @@ import FiltersView from '../view/filters-view.js';
 import CreateFormView from '../view/create-form-view.js';
 import EditFormView from '../view/edit-form-view.js';
 import RoutePointView from '../view/route-point-view.js';
+
 import { render, RenderPosition } from '../render.js';
+import { adaptPointToView } from '../utils/point-adapter.js';
 
 export default class MainPresenter {
   #sortContainer = null;
   #filtersContainer = null;
   #tripEventsContainer = null;
+  #pointsModel = null;
 
-  constructor({ sortContainer, filtersContainer, tripEventsContainer }) {
+  constructor({ sortContainer, filtersContainer, tripEventsContainer, pointsModel }) {
     this.#sortContainer = sortContainer;
     this.#filtersContainer = filtersContainer;
     this.#tripEventsContainer = tripEventsContainer;
+    this.#pointsModel = pointsModel;
   }
 
   init() {
@@ -23,67 +27,67 @@ export default class MainPresenter {
   }
 
   #renderFilters() {
-    const filtersComponent = new FiltersView();
-    render(filtersComponent, this.#filtersContainer);
+    render(new FiltersView(), this.#filtersContainer);
   }
 
   #renderSort() {
-    const sortComponent = new SortView();
-    render(sortComponent, this.#sortContainer);
+    render(new SortView(), this.#sortContainer);
   }
 
   #renderTripEvents() {
-    const editFormComponent = new EditFormView({
-      type: 'flight',
-      destination: 'Chamonix',
-      startTime: '18/03/19 12:25',
-      endTime: '18/03/19 13:35',
-      price: '160'
-    });
-    render(editFormComponent, this.#tripEventsContainer, RenderPosition.AFTERBEGIN);
+    const points = this.#pointsModel.getRandomPoints();
 
-    const routePointsData = [
-      {
-        type: 'taxi',
-        destination: 'Amsterdam',
-        date: '2019-03-18',
-        startTime: '2019-03-18T10:30',
-        endTime: '2019-03-18T11:00',
-        price: 20,
-        isFavorite: true
-      },
-      {
-        type: 'flight',
-        destination: 'Chamonix',
-        date: '2019-03-18',
-        startTime: '2019-03-18T12:25',
-        endTime: '2019-03-18T13:35',
-        price: 160,
-        isFavorite: false
-      },
-      {
-        type: 'bus',
-        destination: 'Geneva',
-        date: '2019-03-19',
-        startTime: '2019-03-19T14:00',
-        endTime: '2019-03-19T16:30',
-        price: 50,
-        isFavorite: false
-      }
-    ];
+    const [editPoint, ...routePoints] = points;
 
-    routePointsData.forEach((data) => {
-      const routePointComponent = new RoutePointView(data);
-      render(routePointComponent, this.#tripEventsContainer);
+    const editDestination = this.#pointsModel.getDestinationById(
+      editPoint.destination
+    );
+
+    const editOffers = editPoint.offers
+      .map((id) => this.#pointsModel.getOfferById(editPoint.type, id))
+      .filter(Boolean);
+
+    const editPointData = adaptPointToView(
+      editPoint,
+      editDestination,
+      editOffers
+    );
+
+    const destinations = this.#pointsModel.getDestinations();
+    const offersByType = this.#pointsModel.getOffersByType(points.type);
+
+    render(
+      new EditFormView({
+        point: editPointData,
+        destinations,
+        offersByType
+      }),
+      this.#tripEventsContainer,
+      RenderPosition.AFTERBEGIN
+    );
+
+    routePoints.forEach((point) => {
+      const destination = this.#pointsModel.getDestinationById(point.destination);
+
+      const offers = point.offers
+        .map((id) => this.#pointsModel.getOfferById(point.type, id))
+        .filter(Boolean);
+
+      const pointData = adaptPointToView(
+        point,
+        destination,
+        offers
+      );
+
+      render(
+        new RoutePointView(pointData),
+        this.#tripEventsContainer
+      );
     });
 
-    const createFormComponent = new CreateFormView({
-      type: 'flight',
-      destination: 'Geneva',
-      startTime: '19/03/19 00:00',
-      endTime: '19/03/19 00:00',
-      price: ''
-    });
-    render(createFormComponent, this.#tripEventsContainer);
+    render(
+      new CreateFormView(),
+      this.#tripEventsContainer
+    );
   }
 }
