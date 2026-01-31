@@ -20,3 +20,16 @@ export function adaptPointToView(point, destination, offers) {
     offers,
   };
 }
+
+export function getOffersForPoint(point, pointsModel) {
+  return point.offers
+    .map((id) => pointsModel.getOfferById(point.type, id))
+    .filter(Boolean);
+}
+
+export function getAdaptedPointData(point, pointsModel) {
+  const destination = pointsModel.getDestinationById(point.destination);
+  const offers = getOffersForPoint(point, pointsModel);
+
+  return adaptPointToView(point, destination, offers);
+}

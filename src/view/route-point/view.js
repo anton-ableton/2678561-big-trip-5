@@ -1,27 +1,36 @@
-import { createElement } from '../../render.js';
+import AbstractView from '../../framework/view/abstract-view.js';
 import { createRoutePointTemplate } from './templates/main-template.js';
 
-export default class RoutePointView {
-  #element = null;
-  #point = {};
+export default class RoutePointView extends AbstractView {
+  #data = {};
+  #handleEditClick = null;
+  #handleFavoriteClick = null;
 
-  constructor(point = {}) {
-    this.#point = point;
+  constructor({ point, onEditClick, onFavoriteClick }) {
+    super();
+
+    this.#data = { point };
+    this.#handleEditClick = onEditClick;
+    this.#handleFavoriteClick = onFavoriteClick;
+
+    this.element.querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#editClickHandler);
+
+    this.element.querySelector('.event__favorite-btn')
+      .addEventListener('click', this.#favoriteClickHandler);
   }
 
   get template() {
-    return createRoutePointTemplate(this.#point);
+    return createRoutePointTemplate(this.#data.point);
   }
 
-  getElement() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleEditClick?.();
+  };
 
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
+  #favoriteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFavoriteClick?.();
+  };
 }

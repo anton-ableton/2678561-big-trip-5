@@ -1,17 +1,25 @@
+import { render, replace, remove } from '../framework/render.js';
 import SortView from '../view/sort/view.js';
 import FiltersView from '../view/filters/view.js';
-import CreateFormView from '../view/create-form/view.js';
 import EditFormView from '../view/edit-form/view.js';
 import RoutePointView from '../view/route-point/view.js';
 
-import { render, RenderPosition } from '../render.js';
-import { adaptPointToView } from '../utils/point-adapter.js';
+import { getAdaptedPointData } from '../utils/point-adapter.js';
+
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
 
 export default class MainPresenter {
   #sortContainer = null;
   #filtersContainer = null;
   #tripEventsContainer = null;
   #pointsModel = null;
+
+  #mode = Mode.DEFAULT;
+  #currentRoutePoint = null;
+  #currentEditForm = null;
 
   constructor({
     sortContainer,
@@ -29,7 +37,6 @@ export default class MainPresenter {
     this.#renderFilters();
     this.#renderSort();
     this.#renderTripEvents();
-    this.#renderCreateForm();
   }
 
   #renderFilters() {
@@ -43,68 +50,75 @@ export default class MainPresenter {
   #renderTripEvents() {
     const points = this.#pointsModel.getRandomPoints();
 
-    const [editPoint, ...routePoints] = points;
-
-    this.#renderEditForm(editPoint);
-
-    routePoints.forEach((point) => {
-      this.#renderRoutePoint(point);
+    points.forEach((point) => {
+      this.#renderPoint(point);
     });
   }
 
-  #renderEditForm(point) {
-    const editDestination = this.#pointsModel.getDestinationById(
-      point.destination,
-    );
+  #renderPoint(point) {
+    const pointData = getAdaptedPointData(point, this.#pointsModel);
 
-    const editOffers = point.offers
-      .map((id) => this.#pointsModel.getOfferById(point.type, id))
-      .filter(Boolean);
+    let routePointComponent = null;
+    let editFormComponent = null;
 
-    const editPointData = adaptPointToView(
-      point,
-      editDestination,
-      editOffers,
-    );
+    routePointComponent = new RoutePointView({
+      point: pointData,
+      onEditClick: () => this.#handleEditClick(routePointComponent, editFormComponent),
+      onFavoriteClick: () => this.#handleFavoriteClick()
+    });
 
-    const destinations = this.#pointsModel.destinations;
-    const offersByType = this.#pointsModel.getOffersByType(point.type);
+    editFormComponent = new EditFormView({
+      point: pointData,
+      destinations: this.#pointsModel.destinations,
+      offersByType: this.#pointsModel.getOffersByType(point.type),
+      onFormSubmit: () => this.#handleFormSubmit(),
+      onCloseClick: () => this.#replaceFormToCard(),
+      onDeleteClick: () => this.#handleDelete(editFormComponent, routePointComponent),
+    });
 
-    render(
-      new EditFormView({
-        point: editPointData,
-        destinations,
-        offersByType,
-      }),
-      this.#tripEventsContainer,
-      RenderPosition.AFTERBEGIN,
-    );
+    render(routePointComponent, this.#tripEventsContainer);
   }
 
-  #renderRoutePoint(point) {
-    const destination = this.#pointsModel.getDestinationById(
-      point.destination,
-    );
+  #handleEditClick(routePointComponent, editFormComponent) {
+    if (this.#mode === Mode.EDITING) {
+      this.#replaceFormToCard();
+    }
 
-    const offers = point.offers
-      .map((id) => this.#pointsModel.getOfferById(point.type, id))
-      .filter(Boolean);
-
-    const pointData = adaptPointToView(point, destination, offers);
-
-    render(new RoutePointView(pointData), this.#tripEventsContainer);
+    this.#currentRoutePoint = routePointComponent;
+    this.#currentEditForm = editFormComponent;
+    this.#replaceCardToForm();
   }
 
-  #renderCreateForm() {
-    const allDestinations = this.#pointsModel.destinations;
-    const defaultOffers = this.#pointsModel.getOffersByType('flight');
+  #handleFavoriteClick = () => {
+  };
 
-    render(
-      new CreateFormView({
-        destinations: allDestinations,
-        offersByType: defaultOffers,
-      }),
-      this.#tripEventsContainer,
-    );
+  #replaceCardToForm() {
+    replace(this.#currentEditForm, this.#currentRoutePoint);
+    document.addEventListener('keydown', this.#escKeyDownHandler);
+    this.#mode = Mode.EDITING;
   }
+
+  #replaceFormToCard() {
+    replace(this.#currentRoutePoint, this.#currentEditForm);
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    this.#mode = Mode.DEFAULT;
+  }
+
+  #escKeyDownHandler = (evt) => {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      this.#replaceFormToCard();
+    }
+  };
+
+  #handleDelete(editFormComponent, routePointComponent) {
+    remove(editFormComponent);
+    remove(routePointComponent);
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    this.#mode = Mode.DEFAULT;
+  }
+
+  #handleFormSubmit = () => {
+    this.#replaceFormToCard();
+  };
 }
