@@ -3,6 +3,7 @@ import { createEditFormTemplate } from './templates/main-template.js';
 
 export default class EditFormView extends AbstractView {
   #data = null;
+  #handleFormSubmit = null;
   #handleCloseClick = null;
   #handleDeleteClick = null;
 
@@ -10,6 +11,7 @@ export default class EditFormView extends AbstractView {
     point,
     destinations,
     offersByType,
+    onFormSubmit,
     onCloseClick,
     onDeleteClick,
   }) {
@@ -21,6 +23,7 @@ export default class EditFormView extends AbstractView {
       offersByType,
     };
 
+    this.#handleFormSubmit = onFormSubmit;
     this.#handleCloseClick = onCloseClick;
     this.#handleDeleteClick = onDeleteClick;
 
@@ -29,7 +32,6 @@ export default class EditFormView extends AbstractView {
       .addEventListener('click', this.#closeClickHandler);
 
     this.element
-      .querySelector('.event__save-btn')
       .addEventListener('submit', this.#submitHandler);
 
     this.element
@@ -53,5 +55,6 @@ export default class EditFormView extends AbstractView {
 
   #submitHandler = (evt) => {
     evt.preventDefault();
+    this.#handleFormSubmit();
   };
 }

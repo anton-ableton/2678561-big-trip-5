@@ -4,7 +4,7 @@ import FiltersView from '../view/filters/view.js';
 import EditFormView from '../view/edit-form/view.js';
 import RoutePointView from '../view/route-point/view.js';
 
-import { adaptPointToView } from '../utils/point-adapter.js';
+import { getAdaptedPointData } from '../utils/point-adapter.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -18,7 +18,6 @@ export default class MainPresenter {
   #pointsModel = null;
 
   #mode = Mode.DEFAULT;
-
   #currentRoutePoint = null;
   #currentEditForm = null;
 
@@ -57,31 +56,25 @@ export default class MainPresenter {
   }
 
   #renderPoint(point) {
-    const destination = this.#pointsModel.getDestinationById(point.destination);
-
-    const offers = point.offers
-      .map((id) => this.#pointsModel.getOfferById(point.type, id))
-      .filter(Boolean);
-
-    const pointData = adaptPointToView(point, destination, offers);
+    const pointData = getAdaptedPointData(point, this.#pointsModel);
 
     let routePointComponent = null;
     let editFormComponent = null;
 
-    routePointComponent = new RoutePointView(
-      pointData,
-      () => this.#handleEditClick(routePointComponent, editFormComponent),
-      () => {}
-    );
+    routePointComponent = new RoutePointView({
+      point: pointData,
+      onEditClick: () => this.#handleEditClick(routePointComponent, editFormComponent),
+      onFavoriteClick: () => this.#handleFavoriteClick()
+    });
 
     editFormComponent = new EditFormView({
       point: pointData,
       destinations: this.#pointsModel.destinations,
       offersByType: this.#pointsModel.getOffersByType(point.type),
+      onFormSubmit: () => this.#handleFormSubmit(),
       onCloseClick: () => this.#replaceFormToCard(),
       onDeleteClick: () => this.#handleDelete(editFormComponent, routePointComponent),
     });
-
 
     render(routePointComponent, this.#tripEventsContainer);
   }
@@ -93,9 +86,11 @@ export default class MainPresenter {
 
     this.#currentRoutePoint = routePointComponent;
     this.#currentEditForm = editFormComponent;
-
     this.#replaceCardToForm();
   }
+
+  #handleFavoriteClick = () => {
+  };
 
   #replaceCardToForm() {
     replace(this.#currentEditForm, this.#currentRoutePoint);
@@ -119,8 +114,11 @@ export default class MainPresenter {
   #handleDelete(editFormComponent, routePointComponent) {
     remove(editFormComponent);
     remove(routePointComponent);
-
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = Mode.DEFAULT;
   }
+
+  #handleFormSubmit = () => {
+    this.#replaceFormToCard();
+  };
 }
