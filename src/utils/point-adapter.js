@@ -30,6 +30,6 @@ export function getOffersForPoint(point, pointsModel) {
 export function getAdaptedPointData(point, pointsModel) {
   const destination = pointsModel.getDestinationById(point.destination);
   const offers = getOffersForPoint(point, pointsModel);
-  
+
   return adaptPointToView(point, destination, offers);
 }

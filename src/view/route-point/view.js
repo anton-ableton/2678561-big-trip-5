@@ -8,14 +8,14 @@ export default class RoutePointView extends AbstractView {
 
   constructor({ point, onEditClick, onFavoriteClick }) {
     super();
-    
+
     this.#data = { point };
     this.#handleEditClick = onEditClick;
     this.#handleFavoriteClick = onFavoriteClick;
 
     this.element.querySelector('.event__rollup-btn')
       .addEventListener('click', this.#editClickHandler);
-    
+
     this.element.querySelector('.event__favorite-btn')
       .addEventListener('click', this.#favoriteClickHandler);
   }
