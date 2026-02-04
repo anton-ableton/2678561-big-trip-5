@@ -19,7 +19,11 @@ export default class PointsModel {
     return this.#destinations;
   }
 
-  getRandomPoints(count = POINT_COUNT_DEFAULT) {
+  get points() {
+    return this.#getRandomPoints();
+  }
+
+  #getRandomPoints(count = POINT_COUNT_DEFAULT) {
     const shuffled = [...this.#points].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
   }

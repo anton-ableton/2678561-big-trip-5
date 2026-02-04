@@ -41,7 +41,7 @@ export default class MainPresenter {
   }
 
   #renderFilters() {
-    const points = this.#pointsModel.getRandomPoints();
+    const points = this.#pointsModel.points;
     const filters = this.#getFiltersData(points);
 
     render(
@@ -62,7 +62,7 @@ export default class MainPresenter {
 
 
   #renderTripEvents() {
-    const points = this.#pointsModel.getRandomPoints();
+    const points = this.#pointsModel.points;
 
     if (points.length === 0) {
       render(
