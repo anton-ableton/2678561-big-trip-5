@@ -1,4 +1,4 @@
-import MainPresenter from './presenter/main-presenter.js';
+import BoardPresenter from './presenter/board-presenter.js';
 import PointsModel from './model/points-model.js';
 
 const tripEvents = document.querySelector('.trip-events');
@@ -12,7 +12,7 @@ tripEvents.append(sortContainer, eventsList);
 
 const pointsModel = new PointsModel();
 
-new MainPresenter({
+new BoardPresenter({
   sortContainer,
   filtersContainer: document.querySelector('.trip-controls__filters'),
   tripEventsContainer: eventsList,

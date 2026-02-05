@@ -1,8 +1,4 @@
-import {
-  formatDate,
-  formatTime,
-  formatDuration
-} from './utils.js';
+import { formatDate, formatTime, formatDuration } from './utils.js';
 
 export function adaptPointToView(point, destination, offers) {
   return {
@@ -16,7 +12,7 @@ export function adaptPointToView(point, destination, offers) {
     formattedEndTime: formatTime(point.date_to),
     duration: formatDuration(point.date_from, point.date_to),
     price: point.base_price,
-    isFavorite: point.is_favorite,
+    isFavorite: point.isFavorite,
     offers,
   };
 }
