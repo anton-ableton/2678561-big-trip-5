@@ -10,22 +10,23 @@ export default class PointsModel {
   #offers = [];
 
   constructor() {
-    this.#points = pointsMock;
+    this.#points = this.#getRandomPoints(POINT_COUNT_DEFAULT);
     this.#destinations = destinationsMock;
     this.#offers = offersMock;
+  }
+
+  get points() {
+    return this.#points;
   }
 
   get destinations() {
     return this.#destinations;
   }
 
-  get points() {
-    return this.#getRandomPoints();
-  }
-
-  #getRandomPoints(count = POINT_COUNT_DEFAULT) {
-    const shuffled = [...this.#points].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, count);
+  #getRandomPoints(count) {
+    return [...pointsMock]
+      .sort(() => 0.5 - Math.random())
+      .slice(0, count);
   }
 
   getDestinationById(id) {
@@ -38,7 +39,13 @@ export default class PointsModel {
   }
 
   getOfferById(type, offerId) {
-    const offers = this.getOffersByType(type);
-    return offers.find((offer) => offer.id === offerId);
+    return this.getOffersByType(type).find((offer) => offer.id === offerId);
   }
+
+  updatePoint(updatedPoint) {
+    this.#points = this.#points.map((point) =>
+      point.id === updatedPoint.id ? updatedPoint : point
+    );
+  }
+
 }

@@ -5,7 +5,7 @@ export const pointsMock = [
     'date_from': '2026-01-16T09:17:05.783Z',
     'date_to': '2026-01-18T07:06:05.783Z',
     'destination': '1715f7a0-e610-4919-830d-efbe39962c20',
-    'is_favorite': true,
+    'isFavorite': true,
     'offers': [],
     'type': 'sightseeing'
   },
@@ -15,7 +15,7 @@ export const pointsMock = [
     'date_from': '2026-01-20T07:53:05.783Z',
     'date_to': '2026-01-21T22:21:05.783Z',
     'destination': 'c16aa5dc-05fa-4d8e-bc84-dbeade2355b8',
-    'is_favorite': false,
+    'isFavorite': false,
     'offers': [
       '67079c9a-463b-462c-85b7-7eb58bbaf688',
       'ce440a35-475d-4165-a7b3-2089dcb314a9'
@@ -28,7 +28,7 @@ export const pointsMock = [
     'date_from': '2026-01-23T03:11:05.783Z',
     'date_to': '2026-01-24T00:34:05.783Z',
     'destination': '04aa260b-0ce5-4dab-a733-863e69d0003f',
-    'is_favorite': true,
+    'isFavorite': true,
     'offers': [
       'cbbd92f8-f208-4c6c-98ba-2262a1850dbb'
     ],
@@ -40,7 +40,7 @@ export const pointsMock = [
     'date_from': '2026-01-24T19:59:05.783Z',
     'date_to': '2026-01-25T03:35:05.783Z',
     'destination': '0d30a03d-9c24-4426-9ffa-f8dbe5f10b0d',
-    'is_favorite': true,
+    'isFavorite': true,
     'offers': [
       'bf12992c-fb18-4d7a-a749-5bfffdbef6f0'
     ],
@@ -52,7 +52,7 @@ export const pointsMock = [
     'date_from': '2026-01-26T20:40:05.783Z',
     'date_to': '2026-01-28T10:05:05.783Z',
     'destination': '254f154f-f451-4c5d-a850-3a2302adfe61',
-    'is_favorite': true,
+    'isFavorite': true,
     'offers': [],
     'type': 'sightseeing'
   },
@@ -62,7 +62,7 @@ export const pointsMock = [
     'date_from': '2026-01-29T17:02:05.783Z',
     'date_to': '2026-01-30T16:54:05.783Z',
     'destination': '1715f7a0-e610-4919-830d-efbe39962c20',
-    'is_favorite': true,
+    'isFavorite': true,
     'offers': [
       'bf9ab429-e258-4c56-8785-02d6c088e750'
     ],
@@ -74,7 +74,7 @@ export const pointsMock = [
     'date_from': '2026-02-01T08:24:05.783Z',
     'date_to': '2026-02-02T17:55:05.783Z',
     'destination': 'de165f8c-46ef-4614-b6ba-56f30e4a08b4',
-    'is_favorite': false,
+    'isFavorite': false,
     'offers': [],
     'type': 'restaurant'
   },
@@ -84,7 +84,7 @@ export const pointsMock = [
     'date_from': '2026-02-04T13:00:05.783Z',
     'date_to': '2026-02-06T09:38:05.783Z',
     'destination': 'fb067eb3-0831-44cc-8820-066345a6c539',
-    'is_favorite': true,
+    'isFavorite': true,
     'offers': [
       'a5f2ffff-d1db-46a6-97d3-ad74facd620e',
       'c64338f6-5b19-4f58-a1a7-4184652a4ab3',
@@ -98,7 +98,7 @@ export const pointsMock = [
     'date_from': '2026-02-07T12:24:05.783Z',
     'date_to': '2026-02-08T07:47:05.783Z',
     'destination': '03dbffb3-51cb-481c-8183-67aa61808be0',
-    'is_favorite': false,
+    'isFavorite': false,
     'offers': [
       '36d43fa6-1f70-4c3c-a9cd-f5cb8497eb5c',
       '0e6a0801-4f75-43ee-b1d1-7d85eb58e26d'
