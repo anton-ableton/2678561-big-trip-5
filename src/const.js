@@ -2,7 +2,7 @@ export const POINT_COUNT_DEFAULT = 5;
 
 export const SORT_TYPES = [
   { type: 'day', isDisabled: false },
-  { type: 'event', isDisabled: false },
+  { type: 'event', isDisabled: true },
   { type: 'time', isDisabled: false },
   { type: 'price', isDisabled: false },
   { type: 'offers', isDisabled: true },

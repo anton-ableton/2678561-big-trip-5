@@ -27,7 +27,7 @@ export default class SortPresenter {
 
     this.#sortComponent = new SortView({
       currentSortType: this.#currentSortType,
-      onSortTypeChange: this.#handleSortTypeChange,
+      onSortTypeChange: this.#handleSortChange,
     });
 
     if (prevComponent === null) {
@@ -47,17 +47,12 @@ export default class SortPresenter {
   }
 
   setSort(sortType) {
-    this.#currentSortType = sortType;
-    this.init();
-  }
-
-  #handleSortTypeChange = (sortType) => {
     if (this.#currentSortType === sortType) {
       return;
     }
 
     this.#currentSortType = sortType;
-    this.#handleSortChange(sortType);
     this.init();
-  };
+  }
+
 }

@@ -3,13 +3,26 @@ import { createSortTemplate } from './templates/main-template.js';
 
 export default class SortView extends AbstractView {
   #currentSortType = null;
+  #handleSortTypeChange = null;
 
-  constructor({ currentSortType }) {
+  constructor({ currentSortType, onSortTypeChange }) {
     super();
     this.#currentSortType = currentSortType;
+    this.#handleSortTypeChange = onSortTypeChange;
+
+    this.element.addEventListener('change', this.#sortTypeChangeHandler);
   }
 
   get template() {
     return createSortTemplate(this.#currentSortType);
   }
+
+  #sortTypeChangeHandler = (evt) => {
+    if (evt.target.tagName !== 'INPUT') {
+      return;
+    }
+
+    evt.preventDefault();
+    this.#handleSortTypeChange(evt.target.value);
+  };
 }

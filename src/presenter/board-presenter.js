@@ -1,15 +1,13 @@
 import FilterPresenter from './filter-presenter.js';
-import SortPresenter from './sort-presenter.js';
 import PointsPresenter from './points-presenter.js';
-
 import { FilterType } from '../const.js';
 
 export default class BoardPresenter {
   #pointsModel = null;
   #filtersPresenter = null;
-  #sortPresenter = null;
   #pointsPresenter = null;
   #currentFilter = FilterType.EVERYTHING;
+  #sortContainer = null;
 
   constructor({ sortContainer, filtersContainer, tripEventsContainer, pointsModel }) {
     this.#pointsModel = pointsModel;
@@ -21,32 +19,24 @@ export default class BoardPresenter {
       currentFilter: this.#currentFilter,
     });
 
-
-    this.#sortPresenter = new SortPresenter({
-      container: sortContainer,
-      pointsModel: this.#pointsModel,
-    });
-
     this.#pointsPresenter = new PointsPresenter({
       container: tripEventsContainer,
       pointsModel: this.#pointsModel,
       currentFilter: this.#currentFilter,
     });
 
+    this.#sortContainer = sortContainer;
   }
 
   init() {
     this.#filtersPresenter.init();
-    this.#pointsPresenter.init();
-    this.#sortPresenter.init();
+    this.#pointsPresenter.init(this.#sortContainer);
   }
 
   #handleFilterChange = (filterType) => {
     this.#currentFilter = filterType;
-
     this.#pointsPresenter.setFilter(filterType);
     this.#pointsPresenter.destroy();
-    this.#pointsPresenter.init();
+    this.#pointsPresenter.init(this.#sortContainer);
   };
-
 }
